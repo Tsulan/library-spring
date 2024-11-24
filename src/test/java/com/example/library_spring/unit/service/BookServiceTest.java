@@ -1,7 +1,8 @@
-package com.example.library_spring.service;
+package com.example.library_spring.unit.service;
 
 import com.example.library_spring.entity.Book;
 import com.example.library_spring.repository.BookRepository;
+import com.example.library_spring.service.BookService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

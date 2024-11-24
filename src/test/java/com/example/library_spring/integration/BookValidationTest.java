@@ -1,6 +1,7 @@
-package com.example.library_spring.service;
+package com.example.library_spring.integration;
 
 import com.example.library_spring.controller.BookController;
+import com.example.library_spring.service.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
