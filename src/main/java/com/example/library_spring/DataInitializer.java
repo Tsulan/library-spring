@@ -26,6 +26,9 @@ public class DataInitializer {
             book2.setAvailableCopies(3);
             book2.setTotalCopies(3);
 
+            System.out.println(book1);
+            System.out.println(book2);
+
             bookRepository.save(book1);
             bookRepository.save(book2);
         };
