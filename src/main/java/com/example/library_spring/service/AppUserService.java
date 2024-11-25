@@ -3,6 +3,7 @@ package com.example.library_spring.service;
 import com.example.library_spring.entity.AppUser;
 import com.example.library_spring.repository.AppUserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,9 +12,11 @@ import java.util.List;
 public class AppUserService {
 
     private final AppUserRepository appUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public AppUserService(AppUserRepository appUserRepository) {
+    public AppUserService(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
         this.appUserRepository = appUserRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<AppUser> getAllUsers() {
@@ -26,7 +29,7 @@ public class AppUserService {
     }
 
     public AppUser createUser(AppUser user) {
-        if(appUserRepository.findByEmail(user.getEmail()).isPresent()) {
+        if (appUserRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email is already in use");
         }
         return appUserRepository.save(user);
@@ -35,9 +38,9 @@ public class AppUserService {
     public AppUser updateUser(Long id, AppUser updatedUser) {
         AppUser existingUser = getUserById(id);
 
-        if(!existingUser.getEmail().equals(updatedUser.getEmail())) {
+        if (!existingUser.getEmail().equals(updatedUser.getEmail())) {
             appUserRepository.findByEmail(updatedUser.getEmail()).ifPresent(user -> {
-                if(!user.getId().equals(id)) {
+                if (!user.getId().equals(id)) {
                     throw new IllegalArgumentException("Email is already in use by another user");
                 }
             });
@@ -51,9 +54,21 @@ public class AppUserService {
     }
 
     public void deleteUser(Long id) {
-        if(!appUserRepository.existsById(id)) {
+        if (!appUserRepository.existsById(id)) {
             throw new EntityNotFoundException("User with id " + id + " not found");
         }
         appUserRepository.deleteById(id);
+    }
+
+    public AppUser registerUser(AppUser user) {
+        if (appUserRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email is already in use");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return appUserRepository.save(user);
+    }
+
+    //TODO
+    public void loginUser(Long id, String password) {
     }
 }
