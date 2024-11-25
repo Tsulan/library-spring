@@ -68,7 +68,4 @@ public class AppUserService {
         return appUserRepository.save(user);
     }
 
-    //TODO
-    public void loginUser(Long id, String password) {
-    }
 }

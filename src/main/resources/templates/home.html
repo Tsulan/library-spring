@@ -7,7 +7,83 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>Welcome, User!</h1>
-<a href="/logout">Logout</a>
+<h1 class="WelcomeHomePage">Welcome, User!</h1>
+
+<button id="show-available-books">Show All Available Books</button>
+<br>
+<button id="show-borrowed-books">Show My Borrowed Books</button>
+
+<!-- Секция доступных книг -->
+<div id="available-books-section" style="display: none;">
+    <h2>Available Books</h2>
+    <ul id="available-books-list"></ul>
+</div>
+
+<!-- Секция взятых книг -->
+<div id="borrowed-books-section" style="display: none;">
+    <h2>My Borrowed Books</h2>
+    <ul id="borrowed-books-list"></ul>
+</div>
+
+<script>
+    // Показать доступные книги
+    document.getElementById('show-available-books').addEventListener('click', () => {
+        fetch('/api/books')
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById('available-books-list');
+                list.innerHTML = ''; // Очистить список
+                data.forEach(book => {
+                    const li = document.createElement('li');
+                    li.textContent = `${book.title} by ${book.author}`;
+                    const borrowButton = document.createElement('button');
+                    borrowButton.textContent = 'Borrow';
+                    borrowButton.onclick = () => borrowBook(book.id);
+                    li.appendChild(borrowButton);
+                    list.appendChild(li);
+                });
+                document.getElementById('available-books-section').style.display = 'block';
+            });
+    });
+
+    // Показать взятые книги
+    document.getElementById('show-borrowed-books').addEventListener('click', () => {
+        fetch('/api/borrow/borrowed') // Обращение к API для взятых книг
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById('borrowed-books-list');
+                list.innerHTML = ''; // Очистить список
+                data.forEach(borrowRecord => {
+                    const book = borrowRecord.book; // Извлечь данные книги
+                    const li = document.createElement('li');
+                    li.textContent = `${book.title} by ${book.author}`; // Используем вложенные данные книги
+                    const returnButton = document.createElement('button');
+                    returnButton.textContent = 'Return';
+                    returnButton.onclick = () => returnBook(book.id);
+                    li.appendChild(returnButton);
+                    list.appendChild(li);
+                });
+                document.getElementById('borrowed-books-section').style.display = 'block';
+            });
+    });
+
+    // Функция взять книгу
+    function borrowBook(bookId) {
+        fetch(`/api/borrow/${bookId}`, {method: 'POST'})
+            .then(response => {
+                if (response.ok) alert('Book borrowed successfully!');
+                else alert('Failed to borrow the book.');
+            });
+    }
+
+    // Функция вернуть книгу
+    function returnBook(bookId) {
+        fetch(`/api/borrow/return/${bookId}`, {method: 'POST'})
+            .then(response => {
+                if (response.ok) alert('Book returned successfully!');
+                else alert('Failed to return the book.');
+            });
+    }
+</script>
 </body>
 </html>

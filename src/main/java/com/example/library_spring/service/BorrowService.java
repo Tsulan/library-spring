@@ -17,11 +17,13 @@ public class BorrowService {
     private final BorrowedBookRepository borrowedBookRepository;
     private final AppUserRepository appUserRepository;
     private final BookRepository bookRepository;
+    private final AppUserService appUserService;
 
-    public BorrowService(BorrowedBookRepository borrowedBookRepository, AppUserRepository appUserRepository, BookRepository bookRepository) {
+    public BorrowService(BorrowedBookRepository borrowedBookRepository, AppUserRepository appUserRepository, BookRepository bookRepository, AppUserService appUserService) {
         this.borrowedBookRepository = borrowedBookRepository;
         this.appUserRepository = appUserRepository;
         this.bookRepository = bookRepository;
+        this.appUserService = appUserService;
     }
 
     public void borrowBook(Long bookId, Long userId) {
@@ -68,6 +70,11 @@ public class BorrowService {
 
     public List<BorrowedBook> getBorrowedBooksByUser(Long userId) {
         return borrowedBookRepository.findByAppUserId(userId);
+    }
+
+    public List<BorrowedBook> getActiveBorrowedBooksByUser(Long userId) {
+        AppUser appUser = appUserService.getUserById(userId);
+        return borrowedBookRepository.findByReturnDateIsNullAndAppUser(appUser);
     }
 
     public List<BorrowedBook> getAllActiveBorrowedBooks() {

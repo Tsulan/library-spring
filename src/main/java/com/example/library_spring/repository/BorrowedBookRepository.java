@@ -1,5 +1,6 @@
 package com.example.library_spring.repository;
 
+import com.example.library_spring.entity.AppUser;
 import com.example.library_spring.entity.BorrowedBook;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,4 +13,6 @@ public interface BorrowedBookRepository extends JpaRepository<BorrowedBook, Long
     List<BorrowedBook> findByAppUserId(Long userId);
 
     List<BorrowedBook> findByReturnDateIsNull();
+
+    List<BorrowedBook> findByReturnDateIsNullAndAppUser(AppUser appUser);
 }
