@@ -3,10 +3,12 @@ package com.example.library_spring.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+@EnableWebSecurity
 @Configuration
 public class SecurityConfig {
 
@@ -17,25 +19,24 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable()) // disable CSRF (for development)
+        return http
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for REST API
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/api/users").permitAll() // Allow access to pages without authorization
+                        .requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll() // Allow access to these pages without authentication
                         .anyRequest().authenticated() // All other requests require authentication
                 )
                 .formLogin(form -> form
-                        .loginPage("/login") // Custom login page
-                        .defaultSuccessUrl("/home", true) // Redirect to home page after successful login
-                        .permitAll() // Access to the login page without authentication
+                        .loginPage("/login") // Login page
+                        .usernameParameter("email")
+                        .defaultSuccessUrl("/home", true) // Specify the page for redirection after successful login
+                        .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout") // Redirect to the login page after logging out
+                        .logoutSuccessUrl("/login") // Redirect to login after logout
                         .permitAll()
-                );
-
-        return http.build();
+                )
+                .build();
     }
-
 
 }
