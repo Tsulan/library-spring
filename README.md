@@ -111,11 +111,38 @@ src
 
 ---
 
+## **Application Screens**
+
+### Registration
+
+![img.png](src/main/resources/documentation/img.png)
+
+### Login
+
+![img_1.png](src/main/resources/documentation/img_1.png)
+
+### Main page
+
+![img_2.png](src/main/resources/documentation/img_2.png)
+
+### All books
+
+![img_3.png](src/main/resources/documentation/img_3.png)
+
+### Borrow book
+
+![img_4.png](src/main/resources/documentation/img_4.png)
+
+### Borrowed books
+
+![img_5.png](src/main/resources/documentation/img_5.png)
+
+
 ## **Technologies Used**
 
 - **Backend:** Spring Boot, Spring Security
 - **Frontend:** Thymeleaf, HTML, CSS
-- **Database:** MySQL
+- **Database:** H2
 - **Build Tool:** Maven
 
 ---
